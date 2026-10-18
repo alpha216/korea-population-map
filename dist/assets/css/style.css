@@ -3,7 +3,7 @@
   --ink: #334e44;
   --green: #3b6a4a;
   --sea: #d9eef0;
-  --peach: #f3dfcf;
+  --peach: #faedf8;
 }
 * {
   box-sizing: border-box;
@@ -159,7 +159,7 @@ nav button {
 .region:hover,
 .region:focus,
 .region.selected {
-  fill: #e9c7ae;
+  fill: #f3d8ef;
   stroke: #274d33;
   stroke-width: 1.3;
 }
