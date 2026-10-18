@@ -1,5 +1,5 @@
 (async()=>{
-const $=s=>document.querySelector(s),fmt=n=>n.toLocaleString('ko-KR');let data,geo;try{[data,geo]=await Promise.all([fetch('population.json').then(r=>{if(!r.ok)throw Error();return r.json()}),fetch('boundaries.geojson').then(r=>{if(!r.ok)throw Error();return r.json()})]);}catch{ $('#loading').textContent='지도를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';return }
+const $=s=>document.querySelector(s),fmt=n=>n.toLocaleString('ko-KR');let data,geo;try{[data,geo]=await Promise.all([fetch('data/population.json').then(r=>{if(!r.ok)throw Error();return r.json()}),fetch('data/boundaries.geojson').then(r=>{if(!r.ok)throw Error();return r.json()})]);}catch{ $('#loading').textContent='지도를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';return }
 $('#loading').remove();const responsiveView=()=>$('#map').setAttribute('viewBox',innerWidth<=650?'150 30 650 800':'0 0 950 850');responsiveView();window.addEventListener('resize',responsiveView);let year=2025,selected=16,geographic=false,timer=null,mesh=data.meshes['2025'];const W=data.meshWidth,H=data.meshHeight,N=data.rasterWidth,RH=data.rasterHeight;
 const original=Array.from({length:W*H},(_,i)=>[(i%W)/(W-1)*(N-1),Math.floor(i/W)/(H-1)*(RH-1)]);
 const project=([lon,lat])=>[(lon-124)/7*(N-1),(40-lat)/8*(RH-1)];

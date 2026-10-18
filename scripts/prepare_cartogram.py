@@ -18,7 +18,7 @@ for j in range(1,103,3):
   values.append([int(v) if isinstance(v,(int,float)) else None for v in rows[i][j:j+3]])
  assert sum(v[0] or 0 for v in values)==int(rows[2][j])
  data[year]={'total':int(rows[2][j]),'regions':values}
-geo=json.load(open(root/'dist/boundaries.geojson'))
+geo=json.load(open(root/'dist/data/boundaries.geojson'))
 features=geo['features'];features.sort(key=lambda f:codes.index(f['properties']['code']))
 # Equal-distance local approximation: longitude scaled by cos(36 degrees).
 N=128;H=176;cos=math.cos(math.radians(36));bounds=[124,131,32,40]
@@ -72,6 +72,6 @@ for year,record in data.items():
  meshes[year]=np.round(p,3).tolist()
  print(year,'steps',steps,'minimum cell area',round(float(jac.min()),4),flush=True)
 out={'regions':[{'name':n,'kr':rows[i][0],'code':c} for n,i,c in zip(names,rowindexes,codes)],'years':data,'meshes':meshes,'meshWidth':65,'meshHeight':89,'rasterWidth':N,'rasterHeight':H,'bounds':bounds,'minimumCellArea':minimum}
-(root/'dist/population.json').write_text(json.dumps(out,separators=(',',':'),ensure_ascii=False))
-(root/'dist/boundaries.geojson').write_text(json.dumps(geo,separators=(',',':'),ensure_ascii=False))
+(root/'dist/data/population.json').write_text(json.dumps(out,separators=(',',':'),ensure_ascii=False))
+(root/'dist/data/boundaries.geojson').write_text(json.dumps(geo,separators=(',',':'),ensure_ascii=False))
 print('All annual totals reconcile. All mesh cell orientations positive.')

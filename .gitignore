@@ -1,2 +1,23 @@
+# OS and editor files
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+# Local source spreadsheets and secrets
 *.xlsx
+*.xls
+.env
+.env.*
+!.env.example
+# Dependencies and temporary output
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.log
+playwright-report/
+test-results/
+# Private hosting identity is specific to the local Sites deployment
+.openai/
