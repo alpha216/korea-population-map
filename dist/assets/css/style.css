@@ -967,3 +967,16 @@ body {
     font-size: 9px;
   }
 }
+
+.district-fill{stroke:none!important;cursor:pointer}.inset-grid{pointer-events:none}#districtNote{position:absolute;bottom:3px;left:0;width:calc(100% - 290px);text-align:center;color:#718778;font-size:8px;line-height:1.5;margin:0;padding:0 12px;pointer-events:none}@media(max-width:650px){#districtNote{position:relative;bottom:auto;width:90%;margin:8px 5% 0;padding:0;font-size:9px}}
+@media(max-width:650px){.atlas{max-height:none}}
+
+.legend-title strong{font-size:10px;font-weight:600;white-space:nowrap}.metric-options{display:inline-flex;gap:2px;background:#e6ede1;border-radius:5px;padding:3px}.metric-options button{font-size:9px;border:0;border-radius:3px;background:transparent;color:#6e836c;padding:5px 8px;white-space:nowrap}.metric-options button[aria-pressed="true"]{background:#42674f;color:#fff}.metric-note{font-size:8px;color:#829180;margin:7px 0 0;line-height:1.5}@media(max-width:650px){.metric-options button{padding:6px 8px}.legend-title strong{font-size:9px}}
+
+#tooltip{max-width:min(320px,calc(100vw - 24px));line-height:1.7;word-break:keep-all}
+
+/* The metric switch and the legend are separate sibling panels. */
+#mapDataControls{position:absolute;bottom:18px;left:calc((100% - 290px)/2);transform:translateX(-50%);width:min(340px,calc(100% - 340px));display:flex;align-items:center;gap:12px}#mapDataControls #populationLegend{position:relative;left:auto;bottom:auto;transform:none;width:auto;flex:1;min-width:0;margin:0}#metricControls{flex-shrink:0;background:#f9fcf4ed;border:1px solid #d4dfce;border-radius:7px;padding:5px;box-shadow:0 3px 18px #34543c10}#metricControls .metric-options{background:transparent;padding:0}#metricControls .metric-options button{min-height:30px;padding:6px 9px}@media(max-width:650px){#mapDataControls{position:relative;left:auto;bottom:auto;transform:none;width:90%;margin:16px 5% 0;flex-direction:column-reverse;align-items:stretch;gap:10px}#metricControls{align-self:flex-end}#mapDataControls #populationLegend{width:100%;flex:auto}}
+
+/* Metric switch sits to the right of the map-mode toolbar. */
+.map-toolbar{display:grid;grid-template-columns:max-content max-content;align-items:center;column-gap:12px;row-gap:12px}.map-toolbar>.segmented{grid-column:1;grid-row:1}.map-toolbar>label{grid-column:1;grid-row:2}#metricControls{grid-column:2;grid-row:1;align-self:center}.map-toolbar>.island-note{grid-column:1 / -1}.map-toolbar>.island-note:empty{display:none}@media(max-width:650px){.map-toolbar{grid-template-columns:max-content max-content;column-gap:8px;row-gap:9px;justify-content:start}#metricControls{align-self:center}.map-toolbar>.segmented button{padding:7px 8px}#metricControls .metric-options button{padding:5px 7px;min-height:28px}}

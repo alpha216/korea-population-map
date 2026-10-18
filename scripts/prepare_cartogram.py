@@ -1,23 +1,23 @@
 """Build annual population data and an approximate diffusion cartogram mesh.
 Source counts remain exact; spatial allocation uses fixed 2013 provincial polygons.
 """
-import json, math
+import json, math, unicodedata
 from pathlib import Path
 import numpy as np
 from openpyxl import load_workbook
 root=Path(__file__).resolve().parents[1]
-w=load_workbook(next(root.glob('*.xlsx')),read_only=True,data_only=True)
+population_source=root/'Final.xlsx'
+w=load_workbook(population_source,read_only=True,data_only=True)
 s=w['데이터'];s.reset_dimensions();rows=list(s.values)
 names=['Jeju','South Gyeongsang','North Gyeongsang','South Jeolla','North Jeolla','South Chungcheong','North Chungcheong','Gangwon','Gyeonggi','Sejong','Ulsan','Daejeon','Gwangju','Incheon','Daegu','Busan','Seoul']
 codes=['39','38','37','36','35','34','33','32','31','29','26','25','24','23','22','21','11']
-rowindexes=[19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3]
+kr_names=['제주특별자치도','경상남도','경상북도','전라남도','전북특별자치도','충청남도','충청북도','강원특별자치도','경기도','세종특별자치시','울산광역시','대전광역시','광주광역시','인천광역시','대구광역시','부산광역시','서울특별시']
+province_rows={r[0]:r for r in rows[2:] if r[0] in kr_names or r[0]=='전국'}
 data={}
-for j in range(1,103,3):
- year=str(rows[0][j]); values=[]
- for i in rowindexes:
-  values.append([int(v) if isinstance(v,(int,float)) else None for v in rows[i][j:j+3]])
- assert sum(v[0] or 0 for v in values)==int(rows[2][j])
- data[year]={'total':int(rows[2][j]),'regions':values}
+for j,year in enumerate(rows[0][1:],1):
+ values=[[int(province_rows[name][j]) if isinstance(province_rows[name][j],(int,float)) else None,None,None] for name in kr_names]
+ total=int(province_rows['전국'][j]);assert sum(v[0] or 0 for v in values)==total
+ data[str(int(year))]={'total':total,'regions':values}
 geo=json.load(open(root/'dist/data/boundaries.geojson'))
 features=geo['features'];features.sort(key=lambda f:codes.index(f['properties']['code']))
 # Equal-distance local approximation: longitude scaled by cos(36 degrees).
@@ -71,7 +71,7 @@ for year,record in data.items():
  assert np.isfinite(mesh).all() and jac.min()>0,(year,jac.min())
  meshes[year]=np.round(p,3).tolist()
  print(year,'steps',steps,'minimum cell area',round(float(jac.min()),4),flush=True)
-out={'regions':[{'name':n,'kr':rows[i][0],'code':c} for n,i,c in zip(names,rowindexes,codes)],'years':data,'meshes':meshes,'meshWidth':65,'meshHeight':89,'rasterWidth':N,'rasterHeight':H,'bounds':bounds,'minimumCellArea':minimum}
+out={'regions':[{'name':n,'kr':kr,'code':c} for n,kr,c in zip(names,kr_names,codes)],'years':data,'meshes':meshes,'meshWidth':65,'meshHeight':89,'rasterWidth':N,'rasterHeight':H,'bounds':bounds,'minimumCellArea':minimum}
 (root/'dist/data/population.json').write_text(json.dumps(out,separators=(',',':'),ensure_ascii=False))
 (root/'dist/data/boundaries.geojson').write_text(json.dumps(geo,separators=(',',':'),ensure_ascii=False))
 print('All annual totals reconcile. All mesh cell orientations positive.')
