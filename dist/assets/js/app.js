@@ -1,6 +1,15 @@
 (async()=>{
 const $=s=>document.querySelector(s),fmt=n=>n.toLocaleString('ko-KR');let data,geo;try{[data,geo]=await Promise.all([fetch('data/population.json').then(r=>{if(!r.ok)throw Error();return r.json()}),fetch('data/boundaries.geojson').then(r=>{if(!r.ok)throw Error();return r.json()})]);}catch{ $('#loading').textContent='지도를 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';return }
 $('#loading').remove();const responsiveView=()=>$('#map').setAttribute('viewBox',innerWidth<=650?'150 30 650 800':'0 0 950 850');responsiveView();window.addEventListener('resize',responsiveView);let year=2025,selected=16,geographic=false,timer=null,mesh=data.meshes['2025'];const W=data.meshWidth,H=data.meshHeight,N=data.rasterWidth,RH=data.rasterHeight;
+// Zoom transforms only map content; controls, legend and timeline stay fixed.
+const mapSvg=d3.select('#map').attr('tabindex',0).attr('aria-label','대한민국 인구 지도. 휠 또는 두 손가락으로 확대·축소, 드래그로 이동. 키보드 +, −, 0 사용 가능.');
+const zoom=d3.zoom().scaleExtent([1,8]).extent(()=>{const v=$('#map').viewBox.baseVal;return [[v.x,v.y],[v.x+v.width,v.y+v.height]]}).translateExtent([[-950,-850],[1900,1700]]).clickDistance(6).on('start',()=>{$('#tooltip').style.display='none';mapSvg.classed('panning',true)}).on('zoom',e=>{d3.select('#drawing').attr('transform',e.transform);$('#zoomLevel').textContent=Math.round(e.transform.k*100)+'%';$('#zoomIn').disabled=e.transform.k>=8;$('#zoomOut').disabled=e.transform.k<=1}).on('end',()=>mapSvg.classed('panning',false));
+mapSvg.call(zoom);$('#zoomIn').disabled=false;$('#zoomOut').disabled=true;$('#zoomReset').disabled=false;
+const zoomDuration=()=>matchMedia('(prefers-reduced-motion: reduce)').matches?0:250;
+function changeZoom(factor){mapSvg.interrupt('zoom').transition('zoom').duration(zoomDuration()).call(zoom.scaleBy,factor)}
+function resetZoom(){mapSvg.interrupt('zoom').transition('zoom').duration(zoomDuration()).call(zoom.transform,d3.zoomIdentity)}
+$('#zoomIn').onclick=()=>changeZoom(1.5);$('#zoomOut').onclick=()=>changeZoom(1/1.5);$('#zoomReset').onclick=resetZoom;
+mapSvg.on('keydown.zoom-controls',e=>{if(e.key==='+'||e.key==='='){e.preventDefault();changeZoom(1.5)}else if(e.key==='-'||e.key==='−'){e.preventDefault();changeZoom(1/1.5)}else if(e.key==='0'){e.preventDefault();resetZoom()}});
 const original=Array.from({length:W*H},(_,i)=>[(i%W)/(W-1)*(N-1),Math.floor(i/W)/(H-1)*(RH-1)]);
 const project=([lon,lat])=>[(lon-124)/7*(N-1),(40-lat)/8*(RH-1)];
 function warp(p,m=mesh){const x=Math.max(0,Math.min(W-1.00001,p[0]/(N-1)*(W-1))),y=Math.max(0,Math.min(H-1.00001,p[1]/(RH-1)*(H-1))),i=Math.floor(x),j=Math.floor(y),u=x-i,v=y-j,k=j*W+i;return [0,1].map(d=>(1-v)*((1-u)*m[k][d]+u*m[k+1][d])+v*((1-u)*m[k+W][d]+u*m[k+W+1][d]))}
