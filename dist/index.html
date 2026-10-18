@@ -13,18 +13,13 @@
   <body>
     <main>
       <header>
-        <a class="brand" href="./">사람과 공간</a>
+        <a class="brand" href="./"></a>
         <nav>
           <button id="about">데이터와 제작 방법 ↗</button
           ><button id="download">데이터 내려받기 ↓</button>
         </nav>
       </header>
       <section class="atlas">
-        <div class="heading">
-          <p>격자로 보는 인구 카토그램</p>
-          <h1>대한민국</h1>
-          <h2>인구의 변화로 다시 그린 대한민국</h2>
-        </div>
         <div class="map-toolbar">
           <div class="segmented" aria-label="지도 보기 방식">
             <button id="cartogram" class="active" aria-pressed="true">
@@ -115,8 +110,7 @@
         >
       </section>
       <footer>
-        <span>34년의 인구 변화, 달라지는 대한민국의 모습</span
-        ><span>출처: 행정안전부 / KOSIS · 지역별 인구밀도 기반 근사</span>
+        <span>출처: 행정안전부 / KOSIS · 지역별 인구밀도 기반 근사</span>
       </footer>
     </main>
     <dialog id="method">
@@ -165,10 +159,6 @@
       <p>
         원본 자료에 따르면 2010년 1월부터 거주불명 등록자가 인구 통계에
         포함되므로, 이전 연도와 비교할 때 집계 기준의 차이를 고려해야 합니다.
-      </p>
-      <p class="subtle">
-        지도 표현에는 D3와 SVG, 미리 계산한 확산 모형 격자를 사용했습니다. 원본
-        엑셀 파일은 수정하지 않았습니다.
       </p>
     </dialog>
     <script src="assets/vendor/d3.min.js"></script>
